@@ -1,0 +1,15 @@
+# Stage 1: Build the application using Maven
+FROM maven:3.8.5-openjdk-17 AS build
+WORKDIR /app
+COPY pom.xml .
+COPY geographic-service/pom.xml ./geographic-service/
+RUN mvn -f geographic-service/pom.xml dependency:go-offline
+COPY geographic-service/src ./geographic-service/src
+RUN mvn -f geographic-service/pom.xml package
+
+# Stage 2: Create the final lightweight image
+FROM openjdk:17-jre-slim
+WORKDIR /app
+COPY --from=build /app/geographic-service/target/*.jar ./app.jar
+EXPOSE 8083
+ENTRYPOINT ["java", "-jar", "app.jar"]

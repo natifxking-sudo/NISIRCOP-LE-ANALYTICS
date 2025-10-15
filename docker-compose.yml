@@ -1,0 +1,122 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgis/postgis:15-3.3
+    container_name: nisircop_postgres
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: nisircop_analytics
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - nisircop_network
+
+  eureka-server:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - nisircop_network
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+    networks:
+      - nisircop_network
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.auth-service
+    container_name: auth-service
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      - eureka-server
+      - postgres
+    networks:
+      - nisircop_network
+
+  user-service:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.user-service
+    container_name: user-service
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      - eureka-server
+      - postgres
+    networks:
+      - nisircop_network
+
+  geographic-service:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.geographic-service
+    container_name: geographic-service
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      - eureka-server
+      - postgres
+    networks:
+      - nisircop_network
+
+  incident-service:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.incident-service
+    container_name: incident-service
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      - eureka-server
+      - postgres
+    networks:
+      - nisircop_network
+
+  analytics-service:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.analytics-service
+    container_name: analytics-service
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      - eureka-server
+      - postgres
+    networks:
+      - nisircop_network
+
+  frontend-shell:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile.shell
+    container_name: frontend-shell
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-gateway
+    networks:
+      - nisircop_network
+
+networks:
+  nisircop_network:
+    driver: bridge
+
+volumes:
+  postgres_data:

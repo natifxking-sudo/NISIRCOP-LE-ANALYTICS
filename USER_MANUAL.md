@@ -1,44 +1,69 @@
-# User Manual
+# User Manual: NISIRCOP-LE-ANALYTICS
 
-Welcome to the NISIRCOP-LE-ANALYTICS platform. This manual will guide you through the features and functionalities available to you based on your role.
+Welcome to the NISIRCOP-LE-ANALYTICS platform. This manual provides a guide to using the system based on your assigned role.
 
 ## 1. Getting Started
 
 ### 1.1. Logging In
-To access the system, navigate to `http://localhost:3000` and enter your assigned username and password.
+- **URL:** `http://localhost:3000`
+- To access the system, open the URL in your web browser. You will be presented with a login screen.
+- Use the credentials provided by your administrator. For a newly deployed system with the included sample data, you can use the following:
 
-## 2. For OFFICERS
+| Role             | Username         | Password      |
+|------------------|------------------|---------------|
+| Super User       | `superuser`      | `password123` |
+| Police Station   | `downtown_admin` | `password123` |
+| Officer          | `officer1`       | `password123` |
 
-### 2.1. Reporting an Incident
-- Navigate to the "Incidents" module.
-- Click on "Report New Incident".
-- Fill in the required details, including the incident type, priority, and location on the map.
-- Click "Submit" to record the incident.
+## 2. Role: OFFICER
 
-### 2.2. Viewing Your Incidents
-- The incident dashboard will display a list of all incidents you have reported.
-- You can filter and search for specific incidents.
+As an OFFICER, your primary role is to report and manage crime incidents in the field.
 
-## 3. For POLICE_STATION Users
+### 2.1. Dashboard
+Upon logging in, you will see your main dashboard, which provides an overview of incidents you have reported.
 
-### 3.1. Managing Officers
-- Navigate to the "Users" module.
-- Here you can create new accounts for officers assigned to your station.
-- You can also view and manage existing officer accounts.
+### 2.2. Reporting a New Incident
+1.  Navigate to the **Incidents** section from the main menu.
+2.  Click the **"Report New Incident"** button.
+3.  A form will appear. Fill in the required fields:
+    -   **Title:** A brief, clear summary of the incident.
+    -   **Description:** A detailed account of the event.
+    -   **Priority:** (e.g., LOW, MEDIUM, HIGH).
+    -   **Location:** Click on the map to drop a pin at the exact location of the incident. The system will automatically validate if the location is within your operational boundary.
+4.  Click **"Submit"** to save the incident. It will now be visible to your station's administrators.
 
-### 3.2. Monitoring Station Activity
-- The "Incidents" dashboard provides a comprehensive view of all incidents reported within your station's jurisdiction.
-- Use the analytics tools to monitor crime trends and allocate resources effectively.
+### 2.3. Viewing Your Incidents
+-   From the **Incidents** section, you can view a list of all incidents you have personally reported.
+-   You can use the search and filter functions to find specific reports.
 
-## 4. For SUPER_USERs
+## 3. Role: POLICE_STATION
 
-### 4.1. System-Wide Administration
-- As a SUPER_USER, you have full access to all modules and functionalities.
-- You can manage all user accounts, including creating new `POLICE_STATION` users.
+As a POLICE_STATION user, you are responsible for managing the officers and incidents within your station's designated geographical area.
 
-### 4.2. Viewing System Analytics
-- The "Analytics" module provides a high-level overview of crime statistics and trends across all jurisdictions.
-- Use these insights for strategic planning and resource allocation.
+### 3.1. Station Dashboard
+Your dashboard provides a comprehensive view of all incidents reported within your jurisdiction. You can also see key analytics and trends specific to your area.
 
----
-*This is a placeholder document. More detailed instructions and screenshots will be added as the features are developed.*
+### 3.2. User Management
+1.  Navigate to the **Users** module.
+2.  Here, you can view a list of all `OFFICER` accounts assigned to your station.
+3.  Click **"Create New Officer"** to add a new user. You will need to provide their full name, a unique username, and a temporary password.
+
+### 3.3. Incident Monitoring
+-   The **Incidents** module allows you to see all incidents reported by all officers in your station.
+-   You can review incident details, update their status (e.g., from "OPEN" to "UNDER_INVESTIGATION"), and re-assign them if necessary.
+
+## 4. Role: SUPER_USER
+
+As a SUPER_USER, you have complete administrative access to the entire system.
+
+### 4.1. System-Wide Analytics
+-   The **Analytics** dashboard provides a global view of crime statistics and trends across all jurisdictions.
+-   Use these powerful visualizations for strategic planning, resource allocation, and generating high-level reports.
+
+### 4.2. Full User Management
+1.  Navigate to the **Users** module.
+2.  You have the ability to create, view, modify, and delete any user account in the system.
+3.  This includes the ability to create new `POLICE_STATION` users and assign them to their respective geographic boundaries.
+
+### 4.3. System Configuration
+-   The SUPER_USER role is also responsible for managing system-level configurations, such as defining the geographic boundaries for each police station.

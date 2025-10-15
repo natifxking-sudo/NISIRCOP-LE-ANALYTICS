@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: geographic-service
+  datasource:
+    url: jdbc:postgresql://postgres:5432/nisircop_analytics
+    username: postgres
+    password: ${POSTГRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.spatial.dialect.postgis.PostgisDialect
+
+server:
+  port: 8083
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

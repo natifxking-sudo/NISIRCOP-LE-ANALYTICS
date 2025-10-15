@@ -1,36 +1,73 @@
-# API Documentation
+# API Documentation: NISIRCOP-LE-ANALYTICS
 
-This document provides detailed documentation for the NISIRCOP-LE-ANALYTICS API. All endpoints are secured and require a valid JWT token unless otherwise specified.
+This document provides a complete reference for the NISIRCOP-LE-ANALYTICS REST API.
 
-## Authentication
+## 1. Authentication
 
-Authentication is handled by the `auth-service`. To obtain a token, send a POST request to `/auth/login` with user credentials.
+All API endpoints are secured and require a valid JSON Web Token (JWT) to be passed in the `Authorization` header.
 
-## Services
+```
+Authorization: Bearer <your_jwt_token>
+```
 
-This documentation is organized by microservice.
+To obtain a token, send a `POST` request to the **Auth Service**.
 
-### 1. User Service (`/api/v1/users`)
-
-- **GET /api/v1/users**: Get a list of all users. (Requires `SUPER_USER` role)
-- **POST /api/v1/users**: Create a new user. (Requires `SUPER_USER` or `POLICE_STATION` role)
-- **GET /api/v1/users/{id}**: Get details for a specific user.
-- **GET /api/v1/users/username/{username}**: Get user details by username. (Internal endpoint for `auth-service`)
-
-### 2. Incident Service (`/api/v1/incidents`)
-
-- **POST /api/v1/incidents**: Report a new incident.
-- **GET /api/v1/incidents**: Get a list of incidents.
-- **GET /api/v1/incidents/{id}**: Get details for a specific incident.
-
-### 3. Geographic Service (`/api/v1/geo`)
-
-- **POST /api/v1/geo/validate**: Validate if a point is within a boundary.
-
-### 4. Analytics Service (`/api/v1/analytics`)
-
-- **GET /api/v1/analytics/trends**: Get crime trends over time.
-- **GET /api/v1/analytics/heatmap**: Get data for a crime heat map.
+### Auth Service (`/api/v1/auth`)
+-   **`POST /login`**: Authenticates a user and returns a JWT.
+    -   **Request Body:**
+        ```json
+        {
+          "username": "your_username",
+          "password": "your_password"
+        }
+        ```
+    -   **Response:**
+        ```json
+        {
+          "token": "ey..."
+        }
+        ```
 
 ---
-*This is a placeholder document. It will be automatically updated from OpenAPI/Swagger definitions during the build process.*
+
+## 2. API Endpoints by Service
+
+The API is organized by microservice. All paths are prefixed by the API Gateway.
+
+### 2.1. User Service (`/api/v1/users`)
+
+| Method | Endpoint                    | Description                       | Required Role    |
+|--------|-----------------------------|-----------------------------------|------------------|
+| `GET`  | `/`                         | Get a list of all users.          | `SUPER_USER`     |
+| `POST` | `/`                         | Create a new user.                | `SUPER_USER`, `POLICE_STATION` |
+| `GET`  | `/{id}`                     | Get details for a specific user.  | Any              |
+| `GET`  | `/username/{username}`      | Get user by username (internal).  | (Service-to-service) |
+| `PUT`  | `/{id}`                     | Update a user's details.          | `SUPER_USER`, Owner |
+| `DELETE`| `/{id}`                    | Delete a user.                    | `SUPER_USER`     |
+
+
+### 2.2. Incident Service (`/api/v1/incidents`)
+
+| Method | Endpoint | Description                | Required Role |
+|--------|----------|----------------------------|---------------|
+| `POST` | `/`      | Report a new incident.     | `OFFICER`     |
+| `GET`  | `/`      | Get a list of incidents.   | Any           |
+| `GET`  | `/{id}`  | Get details for an incident.| Any           |
+| `PUT`  | `/{id}`  | Update an incident's status.| `POLICE_STATION`, `SUPER_USER` |
+
+### 2.3. Geographic Service (`/api/v1/geo`)
+
+| Method | Endpoint     | Description                                               | Required Role |
+|--------|--------------|-----------------------------------------------------------|---------------|
+| `POST` | `/validate`  | Validate if a geographic point is within a user's boundary.| `OFFICER`     |
+| `GET`  | `/stations`  | Get a list of all police stations and their boundaries.   | `SUPER_USER`  |
+| `POST` | `/stations`  | Create a new police station with a boundary.              | `SUPER_USER`  |
+
+
+### 2.4. Analytics Service (`/api/v1/analytics`)
+
+| Method | Endpoint        | Description                                  | Required Role |
+|--------|-----------------|----------------------------------------------|---------------|
+| `GET`  | `/trends`       | Get crime trend data over a time period.     | `POLICE_STATION`, `SUPER_USER` |
+| `GET`  | `/heatmap`      | Get data to generate a crime heat map.       | `POLICE_STATION`, `SUPER_USER` |
+| `GET`  | `/stats`        | Get summary statistics for incidents.        | `POLICE_STATION`, `SUPER_USER` |
